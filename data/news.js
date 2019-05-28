@@ -1,4 +1,4 @@
-export const news = [
+const news = [
     {
         "id": "1",
         "title": "This is a title one",
@@ -35,3 +35,6 @@ export const news = [
         "content": "This is content seven"
     }
 ];
+
+
+module.exports = news;
