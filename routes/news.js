@@ -1,36 +1,49 @@
 const express = require('express');
-const app = express();
 const router = express.Router();
+const NewsService = require('../services/news');
 
-const data = require('../data/news');
-
-//const newsService = require('../services/news');
 
 router.put('/:id', (req,res) => {
-    res.status('200').json({ 'message': 'Successfully Updated News'});
+    const newsService = new NewsService();
+    newsService.updateNews(req.params.id, req.body.title, req.body.content);
+    res.status('200').json({ 'message': 'Successfully Update News'});
 });
 
 router.delete('/:id', (req,res) => {
+    const newsService = new NewsService();
+    const result = newsService.deleteNews(req.params.id);
 
-    //remove from array
-    res.status('200').json({ 'message': 'Successfully Deleted News'});
+    if(result){
+        res.status('200').json({ 'message': 'Successfully Deleted News'});
+    }else{
+        res.status('404').json({ 'message': `News with the id: ${req.params.id} is not found` });
+    }
+    
 });
 
 router.post('/', (req,res) => {  
-    res.status('201').json({ 'message': 'Successfully Added News', 'body': data });
+    const newsService = new NewsService();
+    const result = newsService.addNews(req.body.title,req.body.content);
+    res.status('200').json({ 'message': 'Successfully Added News'});
 });
 
 router.get('/:id', (req,res) => {
-    data.forEach( (element) => {
-        if( element.id === req.params.id){
-            res.status('200').send(element);
-        }
-    });
+    const newsService = new NewsService();
+    const result = newsService.getNews(req.params.id);
+
+    if(result){
+        res.status('200').json(result);
+    }else{
+        res.status('404').json({ 'message': `News with the id: ${req.params.id} is not found` });
+    }
+    
 });
 
 router.get('/', (req,res) => {
-   res.status('200').json(data);
+    const newsService = new NewsService();
+    const result = newsService.getAllNews();
+    res.status('200').json(result);
+   
 });
-
 
 module.exports = router;
