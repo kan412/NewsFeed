@@ -1,62 +1,40 @@
+const NewsRepository = require('../data/news');
+
 class NewsService{
 
     constructor(){
-        this.data = require('../data/news');
+        this.repository =  new NewsRepository();
     }
 
     getAllNews(){
-       return this.data;
+        return this.repository.getNews();
     }     
     
-    getNews(id){
-        // for( let i=0; i < this.data.length; i++){
-        //     if(this.data[i].id === id){
-        //         return this.data[i];
-        //     }
-        // }
-        const news = this.data.find( (news) => news.id === parseInt(id));
-
-        if(news){
-            return news;
-        }else{
-            return false;
-        }
+    getNewsById(id){
+        return this.repository.getNewsById(id);
     }
 
-    addNews(title, content){
-        const newArticle = {
-            "id" : this.data.length + 1,
-            "title": title,
-            "content": content
-        }
-       
-        this.data.push(newArticle);
-
-        console.log(this.data);
-
+    addNews(news){
+        return this.repository.addNews(news);
     }
 
     deleteNews(id){
-        const news = this.data.find( (news) => news.id === parseInt(id));
+        const article = this.repository.getNewsById(id);
 
-        if(news){
-            const newsIndex = this.data.indexOf(news);
-            this.data.splice(newsIndex,1);
-            return true;
+        if(article){
+            this.repository.deleteNews(article);
         }else{
-            return false;
+            throw new Error(`News with id: ${id} is not found`);
         }
     }
 
-    updateNews(id, title, content){
-        // for( let i=0; i < this.data.length; i++){
-        //     if(this.data[i].id === id){
-        //         const currentNewsIndex = this.data.indexOf(this.data[i]);
-        //         this.data[currentNewsIndex]['title'] = title;
-        //         this.data[currentNewsIndex]['content']= content; 
-        //     }
-        // } 
-        console.log(this.data);
+    updateNews(id, news){
+        const article = this.repository.getNewsById(id);
+        if(article){
+            this.repository.updateNews(article, news);
+        }else{
+            throw new Error(`News with id: ${id} is not found`);
+        }
     }
 
     

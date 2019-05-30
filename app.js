@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const port = 3000;
 const path = require('path');
-const news = require('./routes/news');
+const newsRoute = require('./routes/news');
 const fs = require('fs');
 const morgan = require('morgan');
 
@@ -15,7 +15,7 @@ app.use(morgan(':method :url  :date', { stream: accessLogsStream }));
 app.use(express.json());
 
 // /news routing
-app.use('/news', news);
+app.use('/news', newsRoute);
 
 
 // Main Page
@@ -24,7 +24,8 @@ app.get('/', (req, res) => {
 });
 
 app.use(function (err, req, res, next) {
-    res.status(500).send(err.message);
+    res.status(500).send(err.message || "Unknown Error");
+    next(err,req,res,next);
 })
 
   

@@ -3,47 +3,67 @@ const router = express.Router();
 const NewsService = require('../services/news');
 
 
-router.put('/:id', (req,res) => {
-    const newsService = new NewsService();
-    newsService.updateNews(req.params.id, req.body.title, req.body.content);
-    res.status('200').json({ 'message': 'Successfully Update News'});
-});
+router.put('/:id', updateNews);
+router.delete('/:id', deleteNews);
+router.post('/', addNews);
+router.get('/:id', getSingleNews);
+router.get('/', getAllNews);
 
-router.delete('/:id', (req,res) => {
-    const newsService = new NewsService();
-    const result = newsService.deleteNews(req.params.id);
 
-    if(result){
+function updateNews(req,res,next){
+    try{
+        const newsService = new NewsService();
+        newsService.updateNews(req.params.id, req.body);
+        res.status('200').send('Successfully Update News');
+    }catch(err){
+        next(err,req,res,next);
+    }
+    
+}
+
+function deleteNews(req,res,next){
+    try{
+        const newsService = new NewsService();
+        const result = newsService.deleteNews(req.params.id);
         res.status('200').json({ 'message': 'Successfully Deleted News'});
-    }else{
-        res.status('404').json({ 'message': `News with the id: ${req.params.id} is not found` });
+    }catch(err){
+        next(err,req,res,next);
+    }   
+}
+
+
+function addNews(req,res,next){  
+    try{
+        const newsService = new NewsService();
+        const result = newsService.addNews(req.body.title,req.body.content);
+        res.status('201').json({ 'message': 'Successfully Added News'});
+    }catch(err){
+        next(err,req,res,next);
+    }
+}
+
+function getSingleNews(req,res,next){
+
+    try{
+        const newsService = new NewsService();
+        const result = newsService.getNewsById(req.params.id);
+        res.status('200').send(result);
+    }catch(err){
+        next(err,req,res,next);
     }
     
-});
+}
 
-router.post('/', (req,res) => {  
-    const newsService = new NewsService();
-    const result = newsService.addNews(req.body.title,req.body.content);
-    res.status('200').json({ 'message': 'Successfully Added News'});
-});
-
-router.get('/:id', (req,res) => {
-    const newsService = new NewsService();
-    const result = newsService.getNews(req.params.id);
-
-    if(result){
+function getAllNews(req,res,next){
+    try{
+        const newsService = new NewsService();
+        const result = newsService.getAllNews();
         res.status('200').json(result);
-    }else{
-        res.status('404').json({ 'message': `News with the id: ${req.params.id} is not found` });
-    }
-    
-});
+    }catch(err){
+        next(err,req,res,next);
+    }  
+}
 
-router.get('/', (req,res) => {
-    const newsService = new NewsService();
-    const result = newsService.getAllNews();
-    res.status('200').json(result);
-   
-});
+
 
 module.exports = router;
