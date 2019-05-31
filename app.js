@@ -24,8 +24,11 @@ app.get('/', (req, res) => {
 });
 
 app.use(function (err, req, res, next) {
-    res.status(500).send(err.message || "Unknown Error");
-    next(err,req,res,next);
+    if(err){
+        res.status(500).send(err.message || "Unknown Error");
+    }else{
+        next(err,req,res,next);
+    }
 })
 
   

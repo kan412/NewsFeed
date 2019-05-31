@@ -44,12 +44,7 @@ class NewsRepository{
     }
 
     getNewsById(id){
-        const news = this.data.find( (news) => news.id === parseInt(id));
-        if(news){
-            return news;
-        }else{
-            throw new Error(`News with id: ${id} is not found`);
-        }
+        return this.data.find( (news) => news.id === parseInt(id));
     }
 
     addNews(news){
@@ -60,6 +55,8 @@ class NewsRepository{
         }
 
         this.data.push(newArticle);
+
+        return newArticle;
     }
 
     deleteNews(news){
