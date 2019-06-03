@@ -6,6 +6,18 @@ class NewsService{
         this.repository =  new NewsRepository();
     }
 
+    validateNews(news){
+
+        if(!news.title){
+           throw new Error("Title shouldn't be empty");  
+        }
+
+        if(!news.content){
+            throw new Error("Content shouldn't be empty");
+        }
+
+    }
+
     getAllNews(){
         return this.repository.getNews();
     }     
@@ -18,18 +30,11 @@ class NewsService{
         }
 
         return article;
+    
     }
 
     addNews(news){
-
-        if( (news.title === undefined || news.title === '') && (news.content === undefined || news.content === ''  )) {
-            throw new Error("Title and Content shouldn't be empty");
-        }else if(news.title === undefined || news.title === ''){
-            throw new Error("Title shouldn't be empty");
-        }else if(news.content === undefined || news.content === ''){
-            throw new Error("Content shouldn't be empty");
-        }
-
+        this.validateNews(news);
         return this.repository.addNews(news);
     }
 
@@ -44,21 +49,14 @@ class NewsService{
     }
 
     updateNews(id, news){
-
-        if((news.title === undefined || news.title === '') && (news.content === undefined || news.content === '' )) {
-            throw new Error("Title and Content shouldn't be empty");
-        }else if(news.title === undefined || news.title === ''){
-            throw new Error("Title shouldn't be empty");
-        }else if(news.content === undefined || news.content === ''){
-            throw new Error("Content shouldn't be empty");
-        }
-
+       
+        this.validateNews(news);
         const article = this.repository.getNewsById(id);
-
+        
         if(!article){
             throw new Error(`News with id: ${id} is not found`);
         }
-
+        
         this.repository.updateNews(article, news);
     }
 
