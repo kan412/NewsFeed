@@ -1,4 +1,7 @@
-const NewsRepository = require('../data/news');
+const mongoose = require('mongoose');
+const newsScheme = require('../models/news');
+
+const News = mongoose.model('News', newsScheme);
 
 class NewsService{
 
