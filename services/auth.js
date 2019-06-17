@@ -30,15 +30,13 @@ class AuthService{
 
     login(user){
         const token = this.generateToken(user._id);
-        return { user, token: token};
+        return { token: token};
     }
 
     async register(userDetails){
         this.validateUserDetails(userDetails);
 
         const user = await User.findOne({ username: userDetails.username });
-
-        console.log(user);
 
         if(user) { throw new Error('User Already Exists'); }
 
@@ -50,7 +48,7 @@ class AuthService{
 
         const nUser = await this.auth.create(newUser);
         const token = this.generateToken(nUser._id);
-        return { nUser, token: token };
+        return { token: token };
         
     }
 }
