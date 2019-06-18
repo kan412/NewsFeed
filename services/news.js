@@ -1,13 +1,15 @@
-const NewsRepository = require('../data/news');
+const mongoose = require('mongoose');
+const newsScheme = require('../models/news');
+
+const News = mongoose.model('news', newsScheme);
 
 class NewsService{
 
     constructor(){
-        this.repository =  new NewsRepository();
+        this.repository = News;
     }
 
     validateNews(news){
-
         if(!news.title){
            throw new Error("Title shouldn't be empty");  
         }
@@ -15,15 +17,14 @@ class NewsService{
         if(!news.content){
             throw new Error("Content shouldn't be empty");
         }
-
     }
 
     getAllNews(){
-        return this.repository.getNews();
+        return this.repository.find({});
     }     
     
     getNewsById(id){
-        const article = this.repository.getNewsById(id);
+        const article = this.repository.findById(id)
 
         if(!article){ 
             throw new Error(`News with id: ${id} is not found`);
@@ -35,29 +36,29 @@ class NewsService{
 
     addNews(news){
         this.validateNews(news);
-        return this.repository.addNews(news);
+        return this.repository.create(news);
     }
 
     deleteNews(id){
-        const article = this.repository.getNewsById(id);
+        const article = this.repository.findByIdAndDelete(id);
 
         if(!article){
             throw new Error(`News with id: ${id} is not found`);
         }
 
-        this.repository.deleteNews(article);
+        return article;
     }
 
     updateNews(id, news){
        
         this.validateNews(news);
-        const article = this.repository.getNewsById(id);
+        const article = this.repository.findByIdAndUpdate(id, news);
         
         if(!article){
             throw new Error(`News with id: ${id} is not found`);
         }
         
-        this.repository.updateNews(article, news);
+        return article;
     }
 
     
